@@ -1,0 +1,12 @@
+Checksum status: not valid
+# floppies     : 4
+Floppy 0 type  : 15 (unknown)
+Floppy 1 type  : 15 (unknown)
+HD 0 type      : ff
+HD 1 type      : ff
+HD type 48 data: 65535/255/255 C/H/S, precomp 65535, lz 65535
+HD type 49 data: 65535/255/255 C/H/S, precomp 65535, lz 65535
+DOS base memory: 65535 kB
+Extended memory: 65535 kB (configured), 65535 kB (tested)
+Gfx adapter    : monochrome
+FPU            : installed

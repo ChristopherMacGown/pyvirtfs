@@ -1,0 +1,11 @@
+rootfs / rootfs rw 0 0
+none tests/data/fakesysfs sysfs rw,nosuid,nodev,noexec,relatime 0 0
+none tests/data/fakeprocfs proc rw,nosuid,nodev,noexec,relatime 0 0
+configfs tests/data/fakeconfigfs configfs rw,relatime 0 0
+udev /dev tmpfs rw,relatime,size=10240k,mode=755 0 0
+/dev/sda1 / ext3 rw,noatime,errors=remount-ro,barrier=0,data=writeback 0 0
+none /proc/sys/fs/binfmt_misc binfmt_misc rw,nosuid,nodev,noexec,relatime 0 0
+none /dev/pts devpts rw,nosuid,noexec,relatime,gid=5,mode=620 0 0
+none /dev/shm tmpfs rw,nosuid,nodev,relatime 0 0
+none /var/run tmpfs rw,nosuid,relatime,mode=755 0 0
+none /var/lock tmpfs rw,nosuid,nodev,noexec,relatime 0 0
