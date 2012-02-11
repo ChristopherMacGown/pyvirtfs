@@ -11,6 +11,13 @@ sys, and configfs.
     block.contents
     print block.sda.queue.rotational.contents
 
+
+
     from virtfs import procfs
     mounts = procfs.contents
     print mounts.contents
+
+
+    from virtfs import configfs
+    fakenbd = configfs.fakenbd
+    print fakenbd.contents
