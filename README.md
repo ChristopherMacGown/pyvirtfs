@@ -9,12 +9,12 @@ sys, and configfs.
     from virtfs import sysfs
     block = sysfs.block
     block.contents
-    print block.sda.queue.rotational.contents
+    print block.sda1.queue.rotational.contents
 
 
 
     from virtfs import procfs
-    mounts = procfs.contents
+    mounts = procfs.mounts
     print mounts.contents
 
 
