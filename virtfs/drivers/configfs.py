@@ -16,6 +16,8 @@ from virtfs import drivers
 
 
 class ConfigFS(drivers.VirtFSDriver):
+    '''VirtFSDriver that provides access to the configfs virtual filesystem'''
+
     def __init__(self, configfs_path=None, contents=None):
         if not configfs_path:
             configfs_path = drivers.resolve_virtfs_path(ConfigFS)

@@ -16,6 +16,8 @@ from virtfs import drivers
 
 
 class SysFS(drivers.VirtFSDriver):
+    '''VirtFSDriver that provides access to the sysfs filesystem'''
+
     def __init__(self, sysfs_path=None, contents=None):
         if not sysfs_path:
             sysfs_path = drivers.resolve_virtfs_path(SysFS)

@@ -16,6 +16,8 @@ from virtfs import drivers
 
 
 class ProcFS(drivers.VirtFSDriver):
+    '''VirtFSDriver that provides access to procfs'''
+
     def __init__(self, procfs_path=None, contents=None):
         if not procfs_path:
             procfs_path = drivers.resolve_virtfs_path(ProcFS)
