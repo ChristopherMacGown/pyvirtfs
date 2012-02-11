@@ -6,7 +6,7 @@ proc, sysfs, and configfs.'''
 setup(name='virtfs',
       description=description,
       version='0.9',
-      authors=['Christopher MacGown',],
+      author='Christopher MacGown',
       author_email='ignoti@gmail.com',
       url='',
       packages=['virtfs', 'virtfs/drivers'],)
