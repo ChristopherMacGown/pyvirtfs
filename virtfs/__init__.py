@@ -25,3 +25,5 @@ procfs = procfs.ProcFS()
 if drivers.resolve_virtfs_path(configfs.ConfigFS):
     # ConfigFS may not be enabled, so we don't want to enable it if it isn't.
     configfs = configfs.ConfigFS()
+else:
+    del configfs
