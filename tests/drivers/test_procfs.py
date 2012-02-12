@@ -26,17 +26,12 @@ class TestProcFS(utils.TestHelper):
         self.procfs = procfs.ProcFS()
 
     def test_trying_to_find_an_entry_that_doesnt_exist(self):
-        try:
-            self.procfs.foo
-        except exc.NotFound:
-            self.assertTrue(True, )
-        except:
-            self.assertFalse(True, "expected procfs.foo to raise exc.NotFound")
+        self.assertRaises(exc.NotFound, getattr, self.procfs, 'foo')
 
     def test_trying_to_find_an_entry_that_exists(self):
         self.assertTrue(self.procfs.driver)
         self.assertEqual(['nvram', 'rtc',], self.procfs.driver.contents)
-        self.assertEqual('<ProcFS tests/data/fakeprocfs/driver>',
+        self.assertEqual('<ProcFS mounted at tests/data/fakeprocfs/driver>',
                          str(self.procfs.driver))
 
     def test_walk_to_a_file_not_just_a_directory_entry(self):
@@ -45,7 +40,7 @@ class TestProcFS(utils.TestHelper):
 
         self.assertEqual(['contents'], [d for d 
                                           in dir(self.procfs.driver.nvram)
-                                          if d not in dir(object)])
+                                          if not d.startswith('_')])
 
     def test_resolve_virtfs_path(self):
         self.assertEqual('tests/data/fakeprocfs',

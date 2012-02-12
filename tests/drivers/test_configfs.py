@@ -25,28 +25,24 @@ class TestConfigFS(utils.TestHelper):
         self.configfs = configfs.ConfigFS()
 
     def test_trying_to_find_an_entry_that_doesnt_exist(self):
-        try:
-            self.configfs.foo
-        except exc.NotFound:
-            self.assertTrue(True, )
-        except:
-            self.assertFalse(True,
-                             "expected configfs.foo to raise exc.NotFound")
+        self.assertRaises(exc.NotFound, getattr, self.configfs, 'foo')
 
     def test_trying_to_find_an_entry_that_exists(self):
         self.assertTrue(self.configfs.fakenbd)
         self.assertEqual(['nbd1',], self.configfs.fakenbd.contents)
-        self.assertEqual('<ConfigFS tests/data/fakeconfigfs/fakenbd>',
+        self.assertEqual('<ConfigFS mounted at tests/data/fakeconfigfs/fakenbd>',
                          str(self.configfs.fakenbd))
 
     def test_walk_to_a_file_not_just_a_directory_entry(self):
         self.assertTrue(self.configfs.fakenbd.nbd1.target)
         self.assertEqual('fakeip\n', self.configfs.fakenbd.nbd1.target.contents)
         self.assertEqual('', self.configfs.fakenbd.nbd1.rw.contents)
-        self.assertEqual('<ConfigFS '
-                         'tests/data/fakeconfigfs/fakenbd/nbd1/target>\n'
-                         'fakeip\n',
+        self.assertEqual('<ConfigFSItem at tests/data/fakeconfigfs/fakenbd/nbd1/target>',
                          str(self.configfs.fakenbd.nbd1.target))
+
+        self.assertEqual(['contents', 'save', 'set', ], [d for d 
+                                                           in dir(self.configfs.fakenbd.nbd1.rw)
+                                                           if not d.startswith('_')])
 
     def test_resolve_virtfs_path(self):
         self.assertEqual('tests/data/fakeconfigfs',

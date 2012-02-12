@@ -18,8 +18,13 @@ from virtfs import drivers
 class SysFS(drivers.VirtFSDriver):
     '''VirtFSDriver that provides access to the sysfs filesystem'''
 
-    def __init__(self, sysfs_path=None, contents=None):
+    def __init__(self, sysfs_path=None):
         if not sysfs_path:
             sysfs_path = drivers.resolve_virtfs_path(SysFS)
 
-        super(SysFS, self).__init__(virtfs_path=sysfs_path, contents=contents)
+        super(SysFS, self).__init__(virtfs_path=sysfs_path)
+
+
+@drivers.register_leaf('sysfs')
+class SysFSItem(drivers.WriteableVirtFSItem):
+    pass

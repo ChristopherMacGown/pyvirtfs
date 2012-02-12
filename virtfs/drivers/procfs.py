@@ -18,8 +18,13 @@ from virtfs import drivers
 class ProcFS(drivers.VirtFSDriver):
     '''VirtFSDriver that provides access to procfs'''
 
-    def __init__(self, procfs_path=None, contents=None):
+    def __init__(self, procfs_path=None):
         if not procfs_path:
             procfs_path = drivers.resolve_virtfs_path(ProcFS)
 
-        super(ProcFS, self).__init__(virtfs_path=procfs_path, contents=contents)
+        super(ProcFS, self).__init__(virtfs_path=procfs_path)
+
+
+@drivers.register_leaf('procfs')
+class ProcFSItem(drivers.VirtFSItem):
+    pass

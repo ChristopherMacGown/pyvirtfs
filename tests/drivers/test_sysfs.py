@@ -26,32 +26,30 @@ class TestSysFS(utils.TestHelper):
         self.sysfs = sysfs.SysFS()
 
     def test_trying_to_find_an_entry_that_doesnt_exist(self):
-        try:
-            self.sysfs.foo
-        except exc.NotFound:
-            self.assertTrue(True, )
-        except:
-            self.assertFalse(True, "expected sysfs.foo to raise exc.NotFound")
+        self.assertRaises(exc.NotFound, getattr, self.sysfs, 'foo')
 
     def test_trying_to_find_an_entry_that_exists(self):
         self.assertTrue(self.sysfs.block)
         self.assertEqual(['sda',], self.sysfs.block.contents)
-        self.assertEqual('<SysFS tests/data/fakesysfs/block>',
+        self.assertEqual('<SysFS mounted at tests/data/fakesysfs/block>',
                          str(self.sysfs.block))
 
     def test_walk_to_a_file_not_just_a_directory_entry(self):
         self.assertTrue(self.sysfs.block.sda.dev)
         with self.sysfs.block.sda.dev as contents:
             self.assertEqual("8:0\n", contents)
-        self.assertEqual('<SysFS tests/data/fakesysfs/block/sda/dev>\n8:0\n',
+        self.assertEqual('<SysFSItem at tests/data/fakesysfs/block/sda/dev>',
                          str(self.sysfs.block.sda.dev))
 
         self.assertTrue(self.sysfs.block.sda.capability)
         with self.sysfs.block.sda.capability as contents:
             self.assertEqual("50\n", contents)
-        self.assertEqual('<SysFS tests/data/fakesysfs/block/sda/capability>'
-                         '\n50\n',  # The continuation of above   
+        self.assertEqual('<SysFSItem at tests/data/fakesysfs/block/sda/capability>',
                         str(self.sysfs.block.sda.capability))
+
+        self.assertEqual(['contents', 'save', 'set', ], [d for d 
+                                                           in dir(self.sysfs.block.sda.dev)
+                                                           if not d.startswith('_')])
 
     def test_resolve_virtfs_path(self):
         self.assertEqual('tests/data/fakesysfs',

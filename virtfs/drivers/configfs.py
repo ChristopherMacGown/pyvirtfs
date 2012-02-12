@@ -16,11 +16,16 @@ from virtfs import drivers
 
 
 class ConfigFS(drivers.VirtFSDriver):
-    '''VirtFSDriver that provides access to the configfs virtual filesystem'''
+    '''VirtFSDriver that provides read/write access to the configfs
+    virtual filesystem'''
 
-    def __init__(self, configfs_path=None, contents=None):
+    def __init__(self, configfs_path=None):
         if not configfs_path:
             configfs_path = drivers.resolve_virtfs_path(ConfigFS)
 
-        super(ConfigFS, self).__init__(virtfs_path=configfs_path,
-                                       contents=contents)
+        super(ConfigFS, self).__init__(virtfs_path=configfs_path)
+
+
+@drivers.register_leaf('configfs')
+class ConfigFSItem(drivers.WriteableVirtFSItem):
+    pass
