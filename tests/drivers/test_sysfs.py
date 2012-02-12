@@ -51,6 +51,16 @@ class TestSysFS(utils.TestHelper):
                                                            in dir(self.sysfs.block.sda.dev)
                                                            if not d.startswith('_')])
 
+        contents = self.sysfs.block.sda.dev.contents
+        def write_all_the_things(x):
+            self.sysfs.block.sda.dev = x
+
+        write_all_the_things('10')
+        self.assertEqual('10', self.sysfs.block.sda.dev.contents)
+        self.assertFalse(contents == self.sysfs.block.sda.dev.contents)
+        self.sysfs.block.sda.dev = contents
+
     def test_resolve_virtfs_path(self):
+
         self.assertEqual('tests/data/fakesysfs',
                           drivers.resolve_virtfs_path(sysfs.SysFS))

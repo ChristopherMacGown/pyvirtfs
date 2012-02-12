@@ -78,6 +78,22 @@ class VirtFSDriver(object):
         return "<%s mounted at %s>" % (self.__class__.__name__,
                                        self._virtfs_path)
 
+    def __setattr__(self, name, value):
+        try:
+            child = super(VirtFSDriver, self).__getattribute__(name)
+        except AttributeError:
+            child = None
+
+        if not child and name.startswith('_'):
+            object.__setattr__(self, name, value)
+        elif not child and self.is_child(name):
+            super(VirtFSDriver, self).__setattr__(name, value)
+        elif child:
+            child.set(value)
+
+    def is_child(self, name):
+        return os.path.exists(os.path.join(self._virtfs_path, name))
+
     @property
     def contents(self):
         '''If this is a directory node, return the list of contained files. If
@@ -118,6 +134,10 @@ class VirtFSItem(object):
     def __exit__(self, *args):
         pass
 
+    def set(self, value, auto_save=True):
+        raise NotImplementedError("%s is not writeable." 
+                                  % self.__class__.__name__)
+
     @property
     def contents(self):
         if self._contents:
@@ -127,18 +147,28 @@ class VirtFSItem(object):
 
 class WriteableVirtFSItem(VirtFSItem):
     '''A VirtFSItem that can be written back to the virtual filesystem.'''
-
+    def __init__(self, path, lazy_load=True):
+        super(WriteableVirtFSItem, self).__init__(path, lazy_load)
+        self._tmp_virtfs_item_path = os.path.join('/tmp/',
+                                                  self._virtfs_item_path)
     def set(self, value, auto_save=True):
         self._contents = value
         if auto_save:
             self.save()
 
+    def _guarantee_tempdir(self):
+        tempdir = os.path.dirname(self._tmp_virtfs_item_path)
+        if not os.path.exists(tempdir):
+            os.makedirs(tempdir, 0700)
+
     def save(self):
+        self._guarantee_tempdir()
         with open(self._tmp_virtfs_item_path, 'w') as contents:
             contents.write(self._contents if self._contents else '')
 
         try:
             os.rename(self._tmp_virtfs_item_path, self._virtfs_item_path)
+            os.removedirs(os.path.dirname(self._tmp_virtfs_item_path))
         except IOError, e:
             raise exc.CouldNotSetValueError(e)
 

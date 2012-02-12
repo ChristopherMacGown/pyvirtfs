@@ -38,9 +38,15 @@ class TestProcFS(utils.TestHelper):
         self.assertTrue(self.procfs.driver.nvram)
         self.assertTrue("Gfx adapter" in self.procfs.driver.nvram.contents)
 
-        self.assertEqual(['contents'], [d for d 
-                                          in dir(self.procfs.driver.nvram)
-                                          if not d.startswith('_')])
+        self.assertEqual(['contents', 'set'], [d for d 
+                                                 in dir(self.procfs.driver.nvram)
+                                                 if not d.startswith('_')])
+
+        contents = self.procfs.driver.nvram.contents
+        def write_all_the_things(x):
+            self.procfs.driver.nvram = x
+        self.assertRaises(NotImplementedError, write_all_the_things, 10)
+        self.assertEqual(contents, self.procfs.driver.nvram.contents)
 
     def test_resolve_virtfs_path(self):
         self.assertEqual('tests/data/fakeprocfs',
